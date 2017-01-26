@@ -11,11 +11,11 @@ Generating the list is as simple as 1-2-3:
 ```
 sh 1-extract.sh
 sh 2-convert.sh
-python 3-consolidate.py
+python 3-consolidate.py > places.ndjson
 ```
 
 Running the script requires that `ogr2ogr` be installed (it's
 available in the Debian package `gdal-bin`) and that the `geojson`
 Python library be installed.
 
-This repository includes CC-BY data from [[GeoNames|http://download.geonames.org/export/zip/]], and public domain data from [[the US Census Bureau|https://www.census.gov/geo/maps-data/data/tiger-cart-boundary.html]].
+This repository includes CC-BY data from GeoNames (http://download.geonames.org/export/zip/), and public-domain data from the US Census Bureau (https://www.census.gov/geo/maps-data/data/tiger-cart-boundary.html).
