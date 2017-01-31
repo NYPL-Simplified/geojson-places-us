@@ -80,13 +80,19 @@ class Place(object):
         for x in aliases:
             if x:
                 self.aliases.add(x)
+
+    @property
+    def output(self):
+        """A Place is output as two lines: one containing metadata
+        and one containing a GeoJSON object.
+        """
+        return "\n".join([json.dumps(self.jsonable), json.dumps(self.geography)])
         
     @property
     def jsonable(self):
         data = dict(type=self.type, id=self.id, name=self.name,
                     abbreviated_name=self.abbreviated_name,
                     full_name=self.full_name,
-                    geography=self.geography,
                     aliases=list(self.aliases)
         )
         if self.parent:
@@ -97,7 +103,6 @@ class Place(object):
 
     def __repr__(self):
         data = self.jsonable
-        data['geography'] = str(type(data['geography']))
         return json.dumps(data)
 
 class Nation(Place):
@@ -277,19 +282,19 @@ class ZipCodes(object):
             yield place
         
 nation = Nation.from_filename("cb_2015_us_nation_5m.json")
-print json.dumps(nation.jsonable)
+print nation.output
 
 states = States.from_filename("cb_2015_us_state_500k.json", nation)
 for state in states.by_id.values():
-    print json.dumps(state.jsonable)
+    print state.output
 
 for county in Counties.from_filename("cb_2015_us_county_500k.json", states):
-    print json.dumps(county.jsonable)
+    print county.output
     
 for city in Cities.from_directory(cb_input_dir, states):
-    print json.dumps(city.jsonable)
+    print city.output
 
 for zip in ZipCodes.from_filenames(geonames_input_dir,
                                    "cb_2015_us_zcta510_500k.json",
                                    nation, states):
-    print json.dumps(zip.jsonable)
+    print zip.output
