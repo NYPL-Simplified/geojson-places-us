@@ -62,7 +62,7 @@ if not os.path.exists(output_dir):
 class Place(object):
 
     def __init__(self, type, geography, id, name,
-                 abbreviated_name=None, full_name=None, parent=None
+                 abbreviated_name=None, parent=None
     ):
         """Rationalizes geographic data from multiple scales into a single
         format.
@@ -72,11 +72,13 @@ class Place(object):
         self.id = id
         self.name = name
         self.abbreviated_name = abbreviated_name
-        self.full_name = full_name
         self.parent = parent
         self.aliases = set()
+
+        # If the name or its abbreviation contains diacritics, create
+        # an ASCII version to serve as an alias.
         aliases = map(ascii_alias,
-                      [self.name, self.abbreviated_name, self.full_name])
+                      [self.name, self.abbreviated_name])
         for x in aliases:
             if x:
                 self.aliases.add(x)
@@ -92,7 +94,6 @@ class Place(object):
     def jsonable(self):
         data = dict(type=self.type, id=self.id, name=self.name,
                     abbreviated_name=self.abbreviated_name,
-                    full_name=self.full_name,
                     aliases=list(self.aliases)
         )
         if self.parent:
@@ -164,11 +165,9 @@ class Counties(object):
             state = states.by_id[county.properties['STATEFP']]
             props = county.properties
             name = props['NAME']
-            full_name = name + ' County'
             place = Place(
                 'county', county.geometry, id=props['GEOID'],
-                name=props['NAME'], full_name=full_name,
-                parent=state
+                name=props['NAME'], parent=state
             )            
             counties.append(place)
         return counties
