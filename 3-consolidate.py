@@ -92,10 +92,14 @@ class Place(object):
         
     @property
     def jsonable(self):
-        data = dict(type=self.type, id=self.id, name=self.name,
-                    abbreviated_name=self.abbreviated_name,
-                    aliases=list(self.aliases)
-        )
+        data = dict(type=self.type, id=self.id, name=self.name)
+        if self.abbreviated_name:
+            data['abbreviated_name'] = self.abbreviated_name
+        if self.aliases:
+            aliases = []
+            data['aliases'] = aliases
+            for alias in self.aliases:
+                aliases.append(dict(name=alias, language='eng'))
         if self.parent:
             data['parent_id'] = self.parent.id
         else:
