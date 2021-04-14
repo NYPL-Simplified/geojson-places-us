@@ -87,3 +87,7 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# Output directory for creating docker artifacts
+docker-output/*
+!docker-output/README.md
